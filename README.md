@@ -4,6 +4,7 @@
 
 - 1.` Создаём файл: `
 
+```
     sudo nano /etc/prometheus/netology-test.yml
 
     groups: # Список групп
@@ -17,14 +18,17 @@
         annotations: # Описание
          description: '{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute.' # Полное   описание алерта
          summary: Instance {{ $labels.instance }} down # Краткое описание алерта
+```
 
 - 2.` Добавим в файле /etc/prometheus/prometheus.yml в раздел rule_files - "netology-test.yml" '   `
 
    
 - 3.`Перезапускаем Prometheus`
 
+```
     sudo systemctl restart prometheus
     systemctl status prometheus
+```
 
 ##### Страница Alert после остановки Node Exporter
 
@@ -36,21 +40,28 @@
 
 - 1.`Скачиваем c и разархивируем архив`
 
+```
     wget https://github.com/prometheus/alertmanager/releases/download/v0.25.0-rc.2/alertmanager-0.25.0-rc.2.linux-amd64.tar.gz
     tar -xvf alertmanager-*linux-amd64.tar.gz
+```
 
 - 2.`Копируем файлы в папки`
 
+```
     sudo cp ./alertmanager-*.linux-amd64/alertmanager /usr/local/bin
     sudo cp ./alertmanager-*.linux-amd64/amtool /usr/local/bin
     sudo cp ./alertmanager-*.linux-amd64/alertmanager.yml /etc/prometheus
+```
 
 - 3.`Назначаем права`
 
+```
     sudo chown -R prometheus:prometheus /etc/prometheus/alertmanager.yml
+```
 
 - 4.`Создаём сервис`
 
+```
     nano /etc/systemd/system/prometheus-alertmanager.service
 
     [Unit]
@@ -66,17 +77,20 @@
     Restart=on-failure
     [Install]
     WantedBy=multi-user.target
- 
+```
+
 - 5.`Запускаем сервис`
 
+```
     sudo systemctl enable prometheus-alertmanager
     sudo systemctl start prometheus-alertmanager
     sudo systemctl status prometheus-alertmanager
-
+```
 ##### Подключаем Alertmanager  к Prometheus   
 
 - 6.`Добавляем в сonfig-файл Prometheus подключение к Alertmanager `
 
+```
     sudo nano /etc/prometheus/prometheus.yml
 
     alerting:
@@ -84,17 +98,19 @@
      - static_configs:
        - targets: # Можно указать как targets: [‘localhost”9093’]
          - localhost:9093
+```
 
 - 7.`Перезапускаем Prometheus`
 
+```
     sudo systemctl restart prometheus
     systemctl status prometheus
-
+```
 
 ##### Настраиваем оповещения в Alertmanager
 
 - 7.`правим конфиг Alertmanager`
-
+```
     sudo nano /etc/prometheus/alertmanager.yml
 
     global:
@@ -113,14 +129,16 @@
         auth_username: 'user'
         auth_identity: 'user'
         auth_password: 'paS$w0rd'
-
+```
 
 - 8.`Перезапускаем и отключаем экспортер для проверки`
 
+```
     sudo systemctl restart prometheus-alertmanager
     systemctl status prometheus-alertmanager
     sudo systemctl stop node-exporter
     systemctl status node-exporter
+```
 
 ##### Страница Alert Prometheus
 
