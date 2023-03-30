@@ -164,7 +164,9 @@
 
 - 2.`Перезапускаем docker`
 
+```
     sudo systemctl restart docker && systemctl status docker
+```
 
 ##### Добавляем endpoint Docker в Prometheus 
 
@@ -172,15 +174,19 @@
 
 - 3.`Добавляем в сonfig-файл Prometheus новый endpoint`
 
+```
     sudo nano /etc/prometheus/prometheus.yml
 
     static_configs:
     - targets: ['localhost:9090', 'localhost:9100', 'server_ip:9323']   
+```
 
 - 2.`Перезапускаем Prometheus`
 
+```
     sudo systemctl restart prometheus
     systemctl status prometheus
+```
 
 -![Скриншот endpoint](./img/3_1.jpg)
 -![Скриншот Status > Targets](./img/3_2.jpg)
